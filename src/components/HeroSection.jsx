@@ -3,6 +3,14 @@ import { motion } from "framer-motion";
 // import video from "../../public/myvideo.mp4";
 
 export default function HeroSection() {
+  const serviceColors = {
+    yellow: "bg-yellow-500 hover:bg-yellow-600",
+    purple: "bg-purple-500 hover:bg-purple-600",
+    blue: "bg-blue-500 hover:bg-blue-600",
+    green: "bg-green-500 hover:bg-green-600",
+    pink: "bg-pink-500 hover:bg-pink-600",
+    red: "bg-red-500 hover:bg-red-600",
+  };
   return (
     <section className="w-full py-6 px-2">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-6 border border-gray-300 p-4 rounded-lg">
@@ -48,7 +56,9 @@ export default function HeroSection() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 key={idx}
-                className={`bg-${service.color}-500 hover:bg-${service.color}-600 text-white font-semibold py-2 rounded-lg shadow-md hover:shadow-xl transition-all duration-300`}
+                className={`${
+                  serviceColors[service.color]
+                } text-white font-semibold py-2 rounded-lg shadow-md hover:shadow-xl transition-all duration-300`}
               >
                 {service.label}
               </motion.button>
