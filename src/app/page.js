@@ -12,15 +12,15 @@ import Trusted from "../components/Trusted";
 
 export default function Home() {
   return (
-    <div>
+    <div className="pt-20 scroll-hidden">
       <HeroSection />
-      <ServicesSection/>
-      <CardSection/>
-      <ScrollCards/>
-      <WhyChooseUsSection/>
-      <FAQInquirySection/>
-      <TestimonialSection/>
-      <Trusted/>
+      <ServicesSection />
+      <CardSection />
+      <ScrollCards />
+      <WhyChooseUsSection />
+      <FAQInquirySection />
+      <TestimonialSection />
+      <Trusted />
     </div>
   );
 }

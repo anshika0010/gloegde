@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 import { Shield } from "lucide-react";
 
@@ -17,52 +17,13 @@ const EsteemedClients = () => {
     { name: "Delta Enterprises", logo: null },
   ];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) observer.observe(sectionRef.current);
-
-    return () => {
-      if (sectionRef.current) observer.disconnect();
-    };
-  }, []);
-
   return (
-    <section
-      ref={sectionRef}
-      className="relative overflow-hidden bg-gradient-to-b from-slate-50 to-white py-20"
-    >
-      {/* Background Grid Pattern */}
-      <div className="absolute inset-0 z-0 opacity-5">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23000000' fillOpacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
-            backgroundSize: "60px 60px",
-          }}
-        />
-      </div>
-
+    <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 to-white py-4">
       <div className="container relative z-10 mx-auto px-6">
         {/* Client Carousel */}
         <div className="text-center">
-          <h3
-            className={`mb-12 text-3xl font-bold text-slate-900 transition-all duration-600 ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-5"
-            }`}
-          >
-            Our <span className="text-red-600">Esteemed Clientele</span>
+          <h3 className="mb-12 text-3xl font-bold text-slate-900 transition-all duration-600">
+            Our Esteemed Clientele
           </h3>
 
           {/* <p
@@ -108,7 +69,6 @@ const EsteemedClients = () => {
               ))}
             </div>
           </div>
-
         </div>
       </div>
 
