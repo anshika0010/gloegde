@@ -540,7 +540,7 @@ export default function Header() {
             <div className="border border-gray-300">
               <a
                 href="#"
-                className="block px-2 xl:px-2 py-5 border-b-4 border-red-500 text-black hover:bg-red-500 hover:text-white transition-all duration-200"
+                className="block px-2 xl:px-2 py-5 border-b-4 border-green-400 text-black hover:bg-red-300 hover:text-white transition-all duration-200"
               >
                 NEWSLETTER
               </a>
