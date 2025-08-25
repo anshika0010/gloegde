@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Play } from "lucide-react";
+import { Play, X } from "lucide-react";
 import Link from "next/link";
 
 const TestimonialSection = () => {
@@ -13,9 +13,9 @@ const TestimonialSection = () => {
       country: "Canada PR Visa",
       description:
         "Y-Axis helped me navigate through the complex immigration process with ease. Their expert guidance made my dream of moving to Canada a reality.",
-      videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // dummy video
+      videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
       videoThumbnail:
-        "https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&w=500&q=80",
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=500&q=80",
       rating: 5,
     },
     {
@@ -24,7 +24,7 @@ const TestimonialSection = () => {
       country: "Australia Work Visa",
       description:
         "From document preparation to visa approval, Y-Axis provided exceptional service throughout my journey.",
-      videoUrl: "https://www.youtube.com/embed/tgbNymZ7vqY", // dummy video
+      videoUrl: "https://www.youtube.com/embed/tgbNymZ7vqY",
       videoThumbnail:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80",
       rating: 5,
@@ -35,7 +35,7 @@ const TestimonialSection = () => {
       country: "UK Study Visa",
       description:
         "The Y-Axis team made my study abroad dreams come true. Excellent service and support!",
-      videoUrl: "https://www.youtube.com/embed/ysz5S6PUM-U", // dummy video
+      videoUrl: "https://www.youtube.com/embed/ysz5S6PUM-U",
       videoThumbnail:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=500&q=80",
       rating: 5,
@@ -44,6 +44,10 @@ const TestimonialSection = () => {
 
   const handlePlayVideo = (id) => {
     setPlayingVideo(id);
+  };
+
+  const closeModal = () => {
+    setPlayingVideo(null);
   };
 
   return (
@@ -81,44 +85,25 @@ const TestimonialSection = () => {
               key={testimonial.id}
               className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
-              {/* Video Section */}
-              {/* Video Section */}
+              {/* Thumbnail Section */}
               <div className="relative aspect-video overflow-hidden group">
-                {playingVideo === testimonial.id ? (
-                  // अगर play button दबाया गया है तो iframe show होगा
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src={testimonial.videoUrl + "?autoplay=1"} // autoplay भी होगा
-                    title="Client Testimonial"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full"
-                  ></iframe>
-                ) : (
-                  // वरना thumbnail + play button show होगा
-                  <>
-                    <img
-                      src={testimonial.videoThumbnail}
-                      alt={`${testimonial.name} testimonial`}
-                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 opacity-90"
-                    />
-                    <div className="absolute inset-0 bg-opacity-40 group-hover:bg-opacity-20 transition-all duration-500 flex items-center justify-center">
-                      <button
-                        onClick={() => handlePlayVideo(testimonial.id)}
-                        className="bg-red-600 hover:bg-red-700 rounded-full p-4 transition-transform duration-300 transform group-hover:scale-110 shadow-lg"
-                      >
-                        <Play className="w-8 h-8 text-white fill-current" />
-                      </button>
-                    </div>
-                  </>
-                )}
+                <img
+                  src={testimonial.videoThumbnail}
+                  alt={`${testimonial.name} testimonial`}
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 opacity-90"
+                />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
+                  <button
+                    onClick={() => handlePlayVideo(testimonial.id)}
+                    className="bg-red-600 hover:bg-red-700 rounded-full p-4 transition-transform duration-300 transform group-hover:scale-110 shadow-lg"
+                  >
+                    <Play className="w-8 h-8 text-white fill-current" />
+                  </button>
+                </div>
               </div>
 
               {/* Content Section */}
               <div className="p-4 space-y-2">
-                {/* Client Info */}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">
                     {testimonial.name}
@@ -127,13 +112,9 @@ const TestimonialSection = () => {
                     {testimonial.country}
                   </p>
                 </div>
-
-                {/* Description */}
                 <p className="text-gray-600 leading-relaxed line-clamp-2">
                   {testimonial.description}
                 </p>
-
-                {/* Read More Button */}
                 <button className="text-red-500 font-semibold hover:text-gray-500 transition-colors duration-200 mt-1">
                   Read More...
                 </button>
@@ -142,6 +123,34 @@ const TestimonialSection = () => {
           ))}
         </div>
       </div>
+
+      {/* Video Popup Modal */}
+      {playingVideo && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-black rounded-lg overflow-hidden relative w-full max-w-3xl aspect-video">
+            {/* Close Button */}
+            <button
+              onClick={closeModal}
+              className="absolute top-2 right-2 bg-white rounded-full p-2 shadow hover:bg-red-600 hover:text-white transition-colors z-10"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <iframe
+              width="100%"
+              height="100%"
+              src={
+                testimonials.find((t) => t.id === playingVideo).videoUrl +
+                "?autoplay=1"
+              }
+              title="Client Testimonial"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            ></iframe>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

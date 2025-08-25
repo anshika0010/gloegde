@@ -1,117 +1,172 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Image from "next/image"
-import image1 from "../../public/image.webp"
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
+import image1 from "../../public/image.webp";
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
 const ScrollCards = () => {
-  const sectionRef = useRef(null)
-  const containerRef = useRef(null)
+  const sectionRef = useRef(null);
+  const containerRef = useRef(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const section = sectionRef.current
-    const container = containerRef.current
-    const cards = gsap.utils.toArray(".card")
+    setMounted(true);
+  }, []);
 
-    if (!section || !container || cards.length === 0) return
+  useEffect(() => {
+    if (!mounted) return;
+    const section = sectionRef.current;
+    const container = containerRef.current;
+    if (!section || !container) return;
 
-    gsap.to(container, {
-      xPercent: -100 * (cards.length - 1),
-      ease: "none",
-      scrollTrigger: {
-        trigger: section,
-        pin: true,
-        scrub: 1,
-        snap: 1 / (cards.length - 1),
-        end: () => "+=" + container.offsetWidth,
-      },
-    })
+    // Compute exact distance (no gaps).
+    const maxX = () => container.scrollWidth - section.clientWidth;
 
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
-    }
-  }, [])
+    // Scope GSAP to this component
+    const ctx = gsap.context(() => {
+      gsap.set(container, { x: 0 });
+
+      gsap.to(container, {
+        // move exactly as wide as needed (no overshoot / no leftover)
+        x: () => -maxX(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          pin: true,
+          scrub: 1,
+          // snap to each card by progress; still smooth
+          snap: 1 / (gsap.utils.toArray(".card").length - 1),
+          end: () => "+=" + maxX(),
+          invalidateOnRefresh: true,
+          anticipatePin: 1,
+          // If you see extra vertical space after the pin, uncomment:
+          // pinSpacing: false,
+        },
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, [mounted]);
 
   const cardData = [
     {
       id: 1,
-      image:image1,
+      image: image1,
       title: "Modern Architecture",
-      description: "Discover innovative architectural designs that shape our future cities",
+      description:
+        "Discover innovative architectural designs that shape our future cities",
     },
     {
       id: 2,
-      image: "/placeholder.svg?height=600&width=800",
+      image:
+        "https://i.pinimg.com/736x/5c/14/72/5c14720afdd38dad4e842657263dbfc5.jpg",
       title: "Natural Beauty",
-      description: "Experience breathtaking landscapes and pristine natural environments",
+      description:
+        "Experience breathtaking landscapes and pristine natural environments",
     },
     {
       id: 3,
-      image: "/placeholder.svg?height=600&width=800",
+      image:
+        "https://i.pinimg.com/736x/cf/f5/e1/cff5e1cba8964bcaeaee87cf0eaecb59.jpg",
       title: "Future Technology",
-      description: "Explore cutting-edge innovations that will transform tomorrow",
+      description:
+        "Explore cutting-edge innovations that will transform tomorrow",
     },
     {
       id: 4,
-      image: "/placeholder.svg?height=600&width=800",
+      image:
+        "https://i.pinimg.com/1200x/dc/38/07/dc3807e84cad06846cc5892e914034a6.jpg",
       title: "Urban Life",
-      description: "Immerse yourself in the energy and rhythm of metropolitan living",
+      description:
+        "Immerse yourself in the energy and rhythm of metropolitan living",
     },
-  ]
+    {
+      id: 5,
+      image:
+        "https://i.pinimg.com/736x/cf/f5/e1/cff5e1cba8964bcaeaee87cf0eaecb59.jpg",
+      title: "Urban Life",
+      description:
+        "Immerse yourself in the energy and rhythm of metropolitan living",
+    },
+    {
+      id: 6,
+      image:
+        "https://i.pinimg.com/736x/cf/f5/e1/cff5e1cba8964bcaeaee87cf0eaecb59.jpg",
+      title: "Urban Life",
+      description:
+        "Immerse yourself in the energy and rhythm of metropolitan living",
+    },
+  ];
+
+  if (!mounted) return null;
 
   return (
-    <section ref={sectionRef} className="relative w-full h-screen overflow-hidden bg-black">
-      <div ref={containerRef} className="flex h-full">
+    <section
+      ref={sectionRef}
+      className="relative w-full bg-white py-16 overflow-hidden"
+    >
+      {/* Heading */}
+      <div className="mb-3">
+        <h2 className="text-3xl px-4 md:text-5xl font-bold text-gray-900">
+          Latest Articles
+        </h2>
+        <p className="mt-4 px-4 text-gray-800 text-xl ">
+          India’s No.1 Overseas Career Consultant and presumably the world’s
+          largest B2C immigration firm. Established in 1999, our 50+
+          company-owned and managed offices across India, Australia, the United
+          Arab Emirates, the United Kingdom, and Canada.
+        </p>
+      </div>
+
+      {/* Cards (use gap instead of mx to avoid trailing space) */}
+      <div
+        ref={containerRef}
+        className="flex h-[400px] gap-16 will-change-transform"
+      >
         {cardData.map((card) => (
-          <div key={card.id} className="card flex-shrink-0 w-screen h-full relative group cursor-pointer">
+          <div
+            key={card.id}
+            className="card flex-shrink-0  rounded-2xl p-5 w-[900px] h-full relative group cursor-pointer"
+          >
             {/* Background Image */}
             <div className="absolute inset-0">
               <Image
-                src={card.image || "/placeholder.svg"}
+                src={card.image}
                 alt={card.title}
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                priority
+                className="object-cover transition-transform duration-700 rounded-xl group-hover:scale-105"
+                priority={card.id === 1}
+                unoptimized={typeof card.image === "string"}
               />
-              {/* Dark overlay for better text readability */}
-              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-500" />
+              <div className="absolute inset-0 bg-black/30 rounded-xl group-hover:bg-black/50 transition-colors duration-500" />
             </div>
 
             {/* Content */}
             <div className="relative z-10 h-full flex flex-col justify-end p-12">
-              {/* Title - always visible */}
-              <h2 className="text-6xl font-bold text-white mb-4 transform transition-transform duration-500 group-hover:translate-y-[-20px]">
+              <h2 className="text-5xl font-bold text-white mb-4 transform transition-transform duration-500 group-hover:-translate-y-5">
                 {card.title}
               </h2>
-
-              {/* Description - visible only on hover */}
-              <p className="text-xl text-white/90 max-w-2xl leading-relaxed opacity-0 transform translate-y-8 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
+              <p className="text-lg text-white/90 max-w-2xl leading-relaxed opacity-0 translate-y-8 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
                 {card.description}
               </p>
             </div>
 
-            {/* Card number indicator */}
+            {/* Card number */}
             <div className="absolute top-8 right-8 z-10">
-              <span className="text-white/60 text-2xl font-light">0{card.id}</span>
+              <span className="text-white/60 text-2xl font-light">
+                0{card.id}
+              </span>
             </div>
           </div>
         ))}
       </div>
-
-      {/* Progress indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
-        <div className="flex space-x-2">
-          {cardData.map((_, index) => (
-            <div key={index} className="w-2 h-2 rounded-full bg-white/40 transition-colors duration-300" />
-          ))}
-        </div>
-      </div>
     </section>
-  )
-}
+  );
+};
 
-export default ScrollCards
+export default ScrollCards;
